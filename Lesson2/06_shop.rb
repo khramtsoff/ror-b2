@@ -14,12 +14,16 @@ loop do
 	amount = gets.to_f
 
 	product = { price: price, amount: amount }	
+	
+	puts "#{product[:price]*product[:amount]}"
 	purchases[title] = product	
 end
 
-puts purchases
-
 s = 0
-purchases.each { |t, p| s += p[:price] * p[:amount] }
+
+purchases.each { |t, p| 
+	puts "#{t} - #{p[:price]} * #{p[:amount]} = #{p[:price]*p[:amount]}"
+	s += p[:price] * p[:amount] 
+}
 
 puts s
