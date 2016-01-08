@@ -53,11 +53,15 @@ class Train
 
 	# Показывать предыдущую станцию, текущую, следующую, на основе маршрута
 	def route_description
-		prev = route_index - 1 >= 0 ? @route[route_index - 1] : "нет"
-		current = route[route_index];
-		following = route_index + 1 < @route.stations.length ? @route[route_index + 1] : "нет"
-		
-		puts "предыдущая - #{prev}, текущая - #{current}, следующая - #{following}"
+		if route
+			prev = route_index - 1 >= 0 ? @route[route_index - 1] : "нет"
+			current = route[route_index];
+			following = route_index + 1 < @route.stations.length ? @route[route_index + 1] : "нет"
+			
+			puts "предыдущая - #{prev}, текущая - #{current}, следующая - #{following}"
+		else 
+			puts "Нет маршрута"
+		end
 	end
 
 end
