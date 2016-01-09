@@ -12,11 +12,8 @@ class RailwayStation
 		puts self.trains
 	end
 	
-	def show_trains_by_type
-		number_of_cargo = self.trains.select{ |t| t.type == Train.CARGO}.size
-		number_of_pass = self.trains.select{ |t| t.type == Train.PASSENGER}.size
-		
-		puts "cargo - #{number_of_cargo}, passenger - #{number_of_pass}"
+	def show_number_of_trains(type)
+		puts self.trains.select{ |t| t.type == type}.size
 	end
 	
 	def remove_train(train)
