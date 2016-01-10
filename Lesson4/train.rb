@@ -26,7 +26,7 @@ class Train
 		self.speed -= delta;
 	end
 
-	def add_wagon(wagon)
+	def add_wagon(wagon=Wagon.new(self.type))
 		self.length += 1 if self.speed == 0 && wagon.type == self.type
 	end
 
@@ -35,7 +35,7 @@ class Train
 	end
 
 	def next_station
-		self.route_index += 1 if self.route.stations.length < self.length - 1
+		self.route_index += 1 if self.route != nil and self.route.stations.length < self.length - 1
 	end
 
 	def route=(route)

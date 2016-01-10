@@ -4,6 +4,6 @@ require_relative 'wagon'
 
 class PassengerWagon < Wagon
 	def initialize
-		type = Train::PASSENGER
+		@type = Train::PASSENGER
 	end
 end
