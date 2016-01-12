@@ -1,11 +1,15 @@
 #!/usr/bin/ruby
 
 class RailwayStation
+
+	@@stations = []
+
 	attr_reader :name, :trains
 	
 	def initialize(name)
 		@name = name    
 		@trains = []
+		@@stations << self
 	end
 	
 	def show_trains
@@ -24,4 +28,7 @@ class RailwayStation
 		self.trains << train
 	end
 	
+		
+	def self.all
+	end
 end
