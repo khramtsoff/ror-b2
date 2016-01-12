@@ -8,10 +8,10 @@ class Train
 	CARGO = "cargo"
 	PASSENGER = "passenger"  
 
+	@@trains = {}
+
 	attr_accessor :route
-	attr_reader :length, :route_index, :speed, :type
-	
-	@@trains = []
+	attr_reader :length, :route_index, :speed, :type, :train_number
 	
 	def self.all
 		puts @@trains
@@ -22,11 +22,16 @@ class Train
 		@@trains[index] if index >=0 and index < @@trains.size
 	end
 	
-	def initialize(type, length)
+	def self.trains
+		@@trains
+	end
+
+	def initialize(train_number, type, length)
+		@train_number = train_number
 		@type = type
-		@length = [0, length].max 
+		@length = [0, length].max
 		@speed = speed
-		@@trains << self
+		@@trains[train_number.to_s.to_sym] = self
 	end
 
 	def stop
@@ -77,6 +82,5 @@ class Train
 	
 	protected
 	
-	attr_writer :type #  указывается при создании
-	attr_writer :speed # кастомные setter/getter
+	attr_writer :type, :speed, :train_number
 end

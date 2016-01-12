@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 
 class RailwayStation
-
 	@@stations = []
 
 	attr_reader :name, :trains

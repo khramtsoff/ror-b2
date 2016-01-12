@@ -20,7 +20,7 @@ menu =
 7. Вызывать Train.all 
 "
 
-@trains = []
+@trains_counter = 0
 @stations = []
 
 def create_station
@@ -38,9 +38,9 @@ def create_train
 	type = gets.to_s
 	puts "Длина:"
 	length = gets.to_i
-	train = Train.new(type, length) if type.length != 0
+	train = Train.new(@trains_counter, type, length) if type.length != 0
 	if train
-		@trains << train 
+		@trains_counter += 1		
 		puts train
 	end
 end
@@ -70,18 +70,18 @@ def move_train_to_next_station
 end
 
 def show_stations_and_trains
-	@trains != nil ? (puts @trains) : (puts "Нет поездов")
-	@stations != nil ? (puts @stations) : (puts "Нет станций")
+	Train.trains.size > 0 ? (puts Train.trains) : (puts "Нет поездов")
+	@stations.size > 0 ? (puts @stations) : (puts "Нет станций")
 end
 
 def get_train
-	size = @trains.size
-	if size == 1
-		@trains.first
-	elsif @trains.size > 0
+	trains = Train.trains
+	if trains.size == 1
+		trains[0]
+	elsif trains.size > 0
 		puts "Номер поезда:"
-		n = gets.to_i
-		@trains[n]
+		n = gets.to_s2
+		trains[n.to_sym]
 	end
 end
 
@@ -107,4 +107,3 @@ while true
 		Train.all
 	end
 end
-
