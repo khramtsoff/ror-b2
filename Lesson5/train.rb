@@ -2,6 +2,27 @@
 
 require_relative 'producer'
 
+module InstanceCounter
+  def self.included(base)
+    base.extend ClassMethods
+    base.send :include, InstanceMethods
+  end
+
+  module ClassMethods
+    @counter
+    def instances
+      @counter
+    end
+  end
+
+  module InstanceMethods
+    private
+
+    def register_instance
+    end
+	end
+end
+
 class Train
 	include Producer
 
@@ -18,8 +39,7 @@ class Train
 	end
 	
 	def self.find(index)
-		index.to_i!
-		@@trains[index] if index >=0 and index < @@trains.size
+		@@trains[index]
 	end
 	
 	def self.trains
