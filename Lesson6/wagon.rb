@@ -10,5 +10,20 @@ class Wagon
 	
 	def initialize(type)
 		@type = type
+		
+		validate!
+	end
+	
+	def valid?
+		validate!
+	rescue 
+		false
+	end
+	
+	protected 
+	
+	def validate!
+		raise "type" if type.to_s == ''
+		true
 	end
 end

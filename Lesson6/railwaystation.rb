@@ -9,6 +9,8 @@ class RailwayStation
 		@name = name    
 		@trains = []
 		@@stations << self
+		
+		validate!
 	end
 	
 	def show_trains
@@ -30,4 +32,18 @@ class RailwayStation
 		
 	def self.all
 	end
+	
+	def valid?
+		validate!
+	rescue 
+		false
+	end
+	
+	protected 
+	
+	def validate!
+		raise "name" if name.to_s == ''
+		true
+	end
+
 end
