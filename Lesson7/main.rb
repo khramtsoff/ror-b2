@@ -107,7 +107,8 @@ def enumerate_stations
 		proc_wagon = Proc.new { |w, i| puts "#{i}-#{w}" }
 		t.call_wagons(proc_wagon)
 	end
-	@stations.each { |s| call_trains(p) }
+	puts @stations
+	@stations.each { |s| s.call_trains(proc_train) }
 end
 
 while true

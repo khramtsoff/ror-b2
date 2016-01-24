@@ -117,8 +117,8 @@ class Train
 		end
 	end
 	
-	def call_wagons(&block)
-		@@wagons.each_with_index { |w, i| block(w, i) }
+	def call_wagons(block)
+		@@wagons.each_with_index { |w, i| block.call(w, i) }
 	end
 	
 	protected
@@ -126,12 +126,12 @@ class Train
 	attr_writer :type, :speed, :train_number
 
 	def validate!
-		raise "train_number empty" if self.train_number.to_s = ''
-		raise "train_number format" if self.train_number !~ NUMBER_FORMAT
-		raise "type" if self.type != CARGO || self.type != PASSENGER
+		raise "train_number empty" if self.train_number.to_s == ''
+#		raise "train_number format" if self.train_number.to_s !~ NUMBER_FORMAT
+#		raise "type" if self.type != CARGO || self.type != PASSENGER
 		raise "length" if self.length.nil? || self.length.to_i < 0
 		raise "speed" if self.length.nil?
-		raise "duplicate train number" if find(self.train_number.to_sym)
+		raise "duplicate train number" if self.class.find(self.train_number.to_s.to_sym)
 		true
 	end	
 end
