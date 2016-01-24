@@ -49,6 +49,21 @@ end
 def add_wagon
 	train = get_train
 	if train
+		puts "Тип (1 - пассажирский, 2 - грузовой):"
+		type = gets.to_i			
+		
+		break if type != 1 || type != 2
+		
+		if type == 1
+			puts "Общее количество мест:"
+			count = gets.to_i
+			w = PassengerWagon.new(count)
+		elsif type == 2
+			puts "Общий объем:"
+			count = gets.to_i
+			w = PassengerWagon.new(count)
+		end
+		
 		train.add_wagon
 		puts train
 	end
