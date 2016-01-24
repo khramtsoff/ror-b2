@@ -6,12 +6,10 @@ require_relative 'producer'
 class Wagon
 	include Producer
 	
-	attr_accessor :type, :total_seats
-	attr_reader :taken_seats
+	attr_accessor :type
 	
-	def initialize(type, total_seats)
+	def initialize(type)
 		@type = type
-		@seats_count = total_seats
 		
 		validate!
 	end
@@ -22,17 +20,7 @@ class Wagon
 		false
 	end
 	
-	def take_seat
-		self.taken_seats += 1 if self.taken_seats <  self.total_seats
-	end
-	
-	def free_seats
-		self.total_seats - self.taken_seats
-	end
-	
 	protected 
-	
-	attr_writer :taken_seats
 	
 	def validate!
 		raise "type" if type.to_s == ''
