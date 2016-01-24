@@ -32,6 +32,8 @@ class Train
 	PASSENGER = "passenger"  
 
 	@@trains = {}
+	
+	@wagons = []
 
 	attr_accessor :route
 	attr_reader :length, :route_index, :speed, :type, :train_number
@@ -79,7 +81,10 @@ class Train
 
 	def add_wagon(wagon=Wagon.new(self.type))
 		raise "wrong type" if wagon.type != self.type
-		self.length += 1 if self.speed == 0 && wagon.type == self.type
+		if self.speed == 0 && wagon.type == self.type
+			self.length += 1 
+			@wagons << wagon
+		end
 	end
 
 	def remove_wagon
@@ -110,6 +115,10 @@ class Train
 		else 
 			puts "Нет маршрута"
 		end
+	end
+	
+	def call_wagons(&block)
+		@@wagons.each { |w| block(w) }
 	end
 	
 	protected
