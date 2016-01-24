@@ -39,6 +39,10 @@ class RailwayStation
 		false
 	end
 	
+	def call_wagons(&block)	
+		self.trains.each { |x| block(x)}
+	end
+	
 	protected 
 	
 	def validate!
