@@ -18,6 +18,10 @@ class PassengerWagon < Wagon
 	def free_seats
 		self.total_seats - self.taken_seats
 	end
+	
+	def to_s
+		"#{self.type}-#{free_seats}-#{taken_seats}"
+	end
 
 	protected 
 		

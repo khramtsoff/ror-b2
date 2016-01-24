@@ -86,9 +86,13 @@ def get_train
 	end
 end
 
-def enumerate_stations
-	p = Proc.new { |t| puts "#{t.train_number}-#{t.type}-#{t.length}"} 
-	@stations.each { |s| call_trains(p)}
+def enumerate_stations	
+	proc_train = Proc.new do |t| 
+		puts "#{t.train_number}-#{t.type}-#{t.length}" 
+		proc_wagon = Proc.new { |w, i| puts "#{i}-#{w}" }
+		t.call_wagons(proc_wagon)
+	end
+	@stations.each { |s| call_trains(p) }
 end
 
 while true

@@ -18,6 +18,10 @@ class CargoWagon < Wagon
 	def free_space
 		self.total_space - self.taken_space
 	end
+	
+	def to_s
+		"#{self.type}-#{free_space}-#{taken_space}"
+	end
 
 	protected 
 		

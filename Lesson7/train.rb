@@ -118,7 +118,7 @@ class Train
 	end
 	
 	def call_wagons(&block)
-		@@wagons.each { |w| block(w) }
+		@@wagons.each_with_index { |w, i| block(w, i) }
 	end
 	
 	protected
