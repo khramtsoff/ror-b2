@@ -8,7 +8,7 @@ class PassengerWagon < Wagon
 
 	def initialize(total_seats)
 		@type = Train::PASSENGER
-		@seats_count = total_seats
+		@total_seats = total_seats
 	end
 	
 	def take_seat
