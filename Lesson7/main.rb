@@ -18,6 +18,7 @@ menu =
 5. Помещать поезда на станцию
 6. Просматривать список станций и список поездов на станции
 7. Вызывать Train.all 
+8. Для каждой станции список поездов в формате: Номер поезда, тип, кол-во вагонов
 "
 
 @trains_counter = 0
@@ -85,9 +86,14 @@ def get_train
 	end
 end
 
+def enumerate_stations
+	p = Proc.new { |t| puts "#{t.train_number}-#{t.type}-#{t.length}"} 
+	@stations.each { |s| call_trains(p)}
+end
+
 while true
 	puts menu
-	print "(1-7):"
+	print "(1-8):"
 	n = gets.to_i
 
 	case n
@@ -105,5 +111,7 @@ while true
 		show_stations_and_trains
 	when 7
 		Train.all
+	when 8
+		enumerate_stations
 	end
 end

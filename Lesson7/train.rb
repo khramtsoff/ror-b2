@@ -20,7 +20,7 @@ module InstanceCounter
 
     def register_instance
     end
-	end
+  end
 end
 
 class Train

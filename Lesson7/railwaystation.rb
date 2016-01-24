@@ -39,8 +39,8 @@ class RailwayStation
 		false
 	end
 	
-	def call_wagons(&block)	
-		self.trains.each { |x| block(x)}
+	def call_trains(&block)	
+		self.trains.each { |t| blockt(t)}
 	end
 	
 	protected 
