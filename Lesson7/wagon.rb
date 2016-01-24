@@ -7,9 +7,11 @@ class Wagon
 	include Producer
 	
 	attr_accessor :type
+	attr_accessor :seats_count
 	
-	def initialize(type)
+	def initialize(type, seats_count)
 		@type = type
+		@seats_count = seats_count
 		
 		validate!
 	end
