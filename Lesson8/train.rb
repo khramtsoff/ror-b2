@@ -24,114 +24,114 @@ module InstanceCounter
 end
 
 class Train
-	include Producer
+  include Producer
 
-	NUMBER_FORMAT = /^([a-zа-я]{3}|\d{3})-{0,1}([a-zа-я]{2}|\d{2})$/i
-	
-	CARGO = "cargo"
-	PASSENGER = "passenger"  
+  NUMBER_FORMAT = /^([a-zа-я]{3}|\d{3})-{0,1}([a-zа-я]{2}|\d{2})$/i
 
-	@@trains = {}
-	
-	@wagons = []
+  CARGO = 'cargo'.freeze
+  PASSENGER = 'passenger'.freeze
 
-	attr_accessor :route
-	attr_reader :length, :route_index, :speed, :type, :train_number
-	
-	def self.all
-		@@trains
-	end
-	
-	def self.find(index)
-		@@trains[index]
-	end
-	
-	def self.trains
-		@@trains
-	end
+  @@trains = {}
 
-	def initialize(train_number, type, length)
-		@train_number = train_number
-		@type = type
-		@length = [0, length].max
-		@speed = speed
-		
-		validate!
+  @wagons = []
 
-		@@trains[train_number.to_s.to_sym] = self
-	end
+  attr_accessor :route
+  attr_reader :length, :route_index, :speed, :type, :train_number
 
-	def valid?
-		validate!
-	rescue 
-		false
-	end
+  def self.all
+    @@trains
+  end
 
-	def stop
-		self.speed = 0
-	end
-	
-	def speed_up(delta)
-		self.speed += delta;
-	end
+  def self.find(index)
+    @@trains[index]
+  end
 
-	def speed_down(delta)
-		self.speed -= delta;
-	end
+  def self.trains
+    @@trains
+  end
 
-	def add_wagon(wagon=Wagon.new(self.type))
-		raise "wrong type" if wagon.type != self.type
-		if self.speed == 0 && wagon.type == self.type
-			self.length += 1 
-			@wagons << wagon
-		end
-	end
+  def initialize(train_number, type, length)
+    @train_number = train_number
+    @type = type
+    @length = [0, length].max
+    @speed = speed
 
-	def remove_wagon
-		self.length -= 1 if self.speed == 0 and self.length > 0
-	end
+    validate!
 
-	def next_station
-		self.route_index += 1 if self.route != nil and self.route.stations.length < self.length - 1
-	end
+    @@trains[train_number.to_s.to_sym] = self
+  end
 
-	def route=(route)
-		@route = route
-		self.route_index = 0
-	end
-	
-	def route_index=(route_index)
-		@route_index = route_index
-		self.route[route_index].current_train = self
-	end
+  def valid?
+    validate!
+  rescue
+    false
+  end
 
-	def route_description
-		if route
-			prev = route_index - 1 >= 0 ? @route[route_index - 1] : "нет"
-			current = route[route_index];
-			following = route_index + 1 < @route.stations.length ? @route[route_index + 1] : "нет"
-			
-			puts "предыдущая - #{prev}, текущая - #{current}, следующая - #{following}"
-		else 
-			puts "Нет маршрута"
-		end
-	end
-	
-	def call_wagons(block)
-		@@wagons.each_with_index { |w, i| block.call(w, i) }
-	end
-	
-	protected
-	
-	attr_writer :type, :speed, :train_number
+  def stop
+    self.speed = 0
+  end
 
-	def validate!
-		raise "train_number empty" if self.train_number.to_s == ''
-#		raise "train_number format" if self.train_number.to_s !~ NUMBER_FORMAT
-#		raise "type" if self.type != CARGO || self.type != PASSENGER
-		raise "length" if self.length.nil? || self.length.to_i < 0
-		raise "speed" if self.length.nil?
-		raise "duplicate train number" if self.class.find(self.train_number.to_s.to_sym)
-		true
-	end	
+  def speed_up(delta)
+    self.speed += delta
+  end
+
+  def speed_down(delta)
+    self.speed -= delta
+  end
+
+  def add_wagon(wagon = Wagon.new(type))
+    fail 'wrong type' if wagon.type != type
+    if self.speed == 0 && wagon.type == type
+      self.length += 1
+      @wagons << wagon
+    end
+  end
+
+  def remove_wagon
+    self.length -= 1 if self.speed == 0 && self.length > 0
+  end
+
+  def next_station
+    self.route_index += 1 if !route.nil? && route.stations.length < self.length - 1
+  end
+
+  def route=(route)
+    @route = route
+    self.route_index = 0
+  end
+
+  def route_index=(route_index)
+    @route_index = route_index
+    route[route_index].current_train = self
+  end
+
+  def route_description
+    if route
+      prev = route_index - 1 >= 0 ? @route[route_index - 1] : "нет"
+      current = route[route_index]
+      following = route_index + 1 < @route.stations.length ? @route[route_index + 1] : "нет"
+
+      puts "предыдущая - #{prev}, текущая - #{current}, следующая - #{following}"
+    else
+      puts "Нет маршрута"
+    end
+  end
+
+  def call_wagons(block)
+    @@wagons.each_with_index { |w, i| block.call(w, i) }
+  end
+
+  protected
+
+  attr_writer :type, :speed, :train_number
+
+  def validate!
+    fail 'train_number empty' if train_number.to_s == ''
+    #		raise "train_number format" if self.train_number.to_s !~ NUMBER_FORMAT
+    #		raise "type" if self.type != CARGO || self.type != PASSENGER
+    fail 'length' if self.length.nil? || self.length.to_i < 0
+    fail 'speed' if self.length.nil?
+    fail 'duplicate train number' if self.class.find(train_number.to_s.to_sym)
+    true
+  end
 end

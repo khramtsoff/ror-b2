@@ -9,129 +9,129 @@ require_relative 'route'
 require_relative 'train'
 require_relative 'wagon'
 
-menu = 
-"
-1. Создавать станции
-2. Создавать поезда
-3. Добавлять вагоны к поезду
-4. Отцеплять вагоны от поезда
-5. Помещать поезда на станцию
-6. Просматривать список станций и список поездов на станции
-7. Вызывать Train.all 
-8. Для каждой станции список поездов в формате: Номер поезда, тип, кол-во вагонов
-"
+menu =
+  "
+  1. Создавать станции
+  2. Создавать поезда
+  3. Добавлять вагоны к поезду
+  4. Отцеплять вагоны от поезда
+  5. Помещать поезда на станцию
+  6. Просматривать список станций и список поездов на станции
+  7. Вызывать Train.all
+  8. Для каждой станции список поездов в формате: Номер поезда, тип, кол-во вагонов
+  "
 
 @trains_counter = 0
 @stations = []
 
 def create_station
-	puts "Название:"
-	name = gets.to_s
-	station = RailwayStation.new(name) if name.length != 0
-	if station
-		@stations << station
-		puts station
-	end
+  puts "Название:"
+  name = gets.to_s
+  station = RailwayStation.new(name) if name.length != 0
+  if station
+    @stations << station
+    puts station
+  end
 end
 
 def create_train
-	puts "Тип(#{Train::PASSENGER},#{Train::CARGO}):"
-	type = gets.to_s
-	puts "Длина:"
-	length = gets.to_i
-	train = Train.new(@trains_counter, type, length) if type.length != 0
-	if train
-		@trains_counter += 1		
-		puts train
-	end
+  puts "Тип(#{Train::PASSENGER},#{Train::CARGO}):"
+  type = gets.to_s
+  puts "Длина:"
+  length = gets.to_i
+  train = Train.new(@trains_counter, type, length) if type.length != 0
+  if train
+    @trains_counter += 1
+    puts train
+  end
 end
 
 def add_wagon
-	train = get_train
-	if train
-		puts "Тип (1 - пассажирский, 2 - грузовой):"
-		type = gets.to_i			
-		
-		if type != 1 || type != 2 
-			if type == 1
-				puts "Общее количество мест:"
-				count = gets.to_i
-				w = PassengerWagon.new(count)
-			elsif type == 2
-				puts "Общий объем:"
-				count = gets.to_i
-				w = PassengerWagon.new(count)
-			end
-			
-			train.add_wagon
-			puts train
-		end		
-	end
+  train = get_train
+  if train
+    puts "Тип (1 - пассажирский, 2 - грузовой):"
+    type = gets.to_i
+
+    if type != 1 || type != 2
+      if type == 1
+        puts "Общее количество мест:"
+        count = gets.to_i
+        w = PassengerWagon.new(count)
+      elsif type == 2
+        puts "Общий объем:"
+        count = gets.to_i
+        w = PassengerWagon.new(count)
+      end
+
+      train.add_wagon
+      puts train
+    end
+  end
 end
 
 def remove_wagon
-	train = get_train
-	if train
-		train.remove_wagon if train
-		puts train
-	end
+  train = get_train
+  if train
+    train.remove_wagon if train
+    puts train
+  end
 end
 
 def move_train_to_next_station
-	train = get_train
-	if train != nil
-		train.next_station
-		puts train
-	end
+  train = get_train
+  unless train.nil?
+    train.next_station
+    puts train
+  end
 end
 
 def show_stations_and_trains
-	Train.trains.size > 0 ? (puts Train.trains) : (puts "Нет поездов")
-	@stations.size > 0 ? (puts @stations) : (puts "Нет станций")
+  Train.trains.size > 0 ? (puts Train.trains) : (puts "Нет поездов")
+  @stations.size > 0 ? (puts @stations) : (puts "Нет станций")
 end
 
 def get_train
-	trains = Train.trains
-	if trains.size == 1
-		trains[0]
-	elsif trains.size > 0
-		puts "Номер поезда:"
-		n = gets.to_s2
-		trains[n.to_sym]
-	end
+  trains = Train.trains
+  if trains.size == 1
+    trains[0]
+  elsif trains.size > 0
+    puts "Номер поезда:"
+    n = gets.to_s2
+    trains[n.to_sym]
+  end
 end
 
-def enumerate_stations	
-	proc_train = Proc.new do |t| 
-		puts "#{t.train_number}-#{t.type}-#{t.length}" 
-		proc_wagon = Proc.new { |w, i| puts "#{i}-#{w}" }
-		t.call_wagons(proc_wagon)
-	end
-	puts @stations
-	@stations.each { |s| s.call_trains(proc_train) }
+def enumerate_stations
+  proc_train = proc do |t|
+    puts "#{t.train_number}-#{t.type}-#{t.length}"
+    proc_wagon = proc { |w, i| puts "#{i}-#{w}" }
+    t.call_wagons(proc_wagon)
+  end
+  puts @stations
+  @stations.each { |s| s.call_trains(proc_train) }
 end
 
-while true
-	puts menu
-	print "(1-8):"
-	n = gets.to_i
+loop do
+  puts menu
+  print '(1-8):'
+  n = gets.to_i
 
-	case n
-	when 1
-		create_station
-	when 2
-		create_train
-	when 3
-		add_wagon
-	when 4
-		remove_wagon
-	when 5
-		move_train_to_next_station
-	when 6
-		show_stations_and_trains
-	when 7
-		Train.all
-	when 8
-		enumerate_stations
-	end
+  case n
+  when 1
+    create_station
+  when 2
+    create_train
+  when 3
+    add_wagon
+  when 4
+    remove_wagon
+  when 5
+    move_train_to_next_station
+  when 6
+    show_stations_and_trains
+  when 7
+    Train.all
+  when 8
+    enumerate_stations
+  end
 end

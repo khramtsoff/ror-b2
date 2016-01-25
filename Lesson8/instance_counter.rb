@@ -1,36 +1,34 @@
 #!/usr/bin/ruby
 
 module InstanceCounter
-	def self.included(base)
-		base.extend ClassMethods
-		base.send :include, InstanceMethods
-	end
+  def self.included(base)
+    base.extend ClassMethods
+    base.send :include, InstanceMethods
+  end
 
-	module ClassMethods
-		attr_accessor :instances
-		def instances
-			@instances ||= 0
-		end
-	end
+  module ClassMethods
+    attr_accessor :instances
+    def instances
+      @instances ||= 0
+    end
+  end
 
-	module InstanceMethods
-		protected
-		
-		def register_instance
-			self.class.instances += 1
-		end
-	end
+  module InstanceMethods
+    protected
+
+    def register_instance
+      self.class.instances += 1
+    end
+  end
 end
 
 class A
-	include InstanceCounter
-	
-	def initialize
-		register_instance
-	end
-	
-end
+  include InstanceCounter
 
+  def initialize
+    register_instance
+  end
+end
 
 a = A.new
 
