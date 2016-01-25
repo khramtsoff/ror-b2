@@ -58,17 +58,21 @@ def add_wagon
 end
 
 def ask_wagon
-  puts "Тип (1 - пассажирский, 2 - грузовой):"
-  type = gets.to_i
-  if type == 1
+  case wagon_type
+  when 1
     puts "Общее количество мест:"
     count = gets.to_i
     PassengerWagon.new(count)
-  elsif type == 2
+  when 2
     puts "Общий объем:"
     count = gets.to_i
     CargoWagon.new(count)
   end
+end
+
+def wagon_type
+  puts "Тип (1 - пассажирский, 2 - грузовой):"
+  gets.to_i
 end
 
 def remove_wagon
