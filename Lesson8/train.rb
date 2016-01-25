@@ -92,7 +92,7 @@ class Train
   end
 
   def next_station
-    self.route_index += 1 if !route.nil? && route.stations.length < self.length - 1
+    self.route_index += 1 if route && route.stations.length < self.length - 1
   end
 
   def route=(route)
@@ -109,11 +109,19 @@ class Train
     if route
       prev = route_index - 1 >= 0 ? @route[route_index - 1] : "нет"
       current = route[route_index]
-      following = route_index + 1 < @route.stations.length ? @route[route_index + 1] : "нет"
 
-      puts "предыдущая - #{prev}, текущая - #{current}, следующая - #{following}"
+      puts "предыдущая - #{prev}, текущая - #{current}, \
+            следующая - #{following}"
     else
       puts "Нет маршрута"
+    end
+  end
+
+  def following
+    if route_index + 1 < @route.stations.length
+      @route[route_index + 1]
+    else
+      "нет"
     end
   end
 

@@ -29,9 +29,3 @@ class A
     register_instance
   end
 end
-
-a = A.new
-
-b = A.new
-
-puts A.instances

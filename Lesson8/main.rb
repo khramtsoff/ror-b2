@@ -18,7 +18,7 @@ menu =
   5. Помещать поезда на станцию
   6. Просматривать список станций и список поездов на станции
   7. Вызывать Train.all
-  8. Для каждой станции список поездов в формате: Номер поезда, тип, кол-во вагонов
+  8. Для каждой станции список поездов
   "
 
 @trains_counter = 0
@@ -28,10 +28,11 @@ def create_station
   puts "Название:"
   name = gets.to_s
   station = RailwayStation.new(name) if name.length != 0
-  if station
-    @stations << station
-    puts station
-  end
+
+  return unless station
+
+  @stations << station
+  puts station
 end
 
 def create_train
@@ -40,49 +41,48 @@ def create_train
   puts "Длина:"
   length = gets.to_i
   train = Train.new(@trains_counter, type, length) if type.length != 0
-  if train
-    @trains_counter += 1
-    puts train
-  end
+
+  return unless train
+
+  @trains_counter += 1
+  puts train
 end
 
 def add_wagon
-  train = get_train
-  if train
-    puts "Тип (1 - пассажирский, 2 - грузовой):"
-    type = gets.to_i
+  return unless train
 
-    if type != 1 || type != 2
-      if type == 1
-        puts "Общее количество мест:"
-        count = gets.to_i
-        w = PassengerWagon.new(count)
-      elsif type == 2
-        puts "Общий объем:"
-        count = gets.to_i
-        w = PassengerWagon.new(count)
-      end
+  w = ask_wagon
 
-      train.add_wagon
-      puts train
-    end
+  train.add_wagon(w)
+  puts train
+end
+
+def ask_wagon
+  puts "Тип (1 - пассажирский, 2 - грузовой):"
+  type = gets.to_i
+  if type == 1
+    puts "Общее количество мест:"
+    count = gets.to_i
+    PassengerWagon.new(count)
+  elsif type == 2
+    puts "Общий объем:"
+    count = gets.to_i
+    CargoWagon.new(count)
   end
 end
 
 def remove_wagon
-  train = get_train
-  if train
-    train.remove_wagon if train
-    puts train
-  end
+  return unless train
+
+  train.remove_wagon if train
+  puts train
 end
 
 def move_train_to_next_station
-  train = get_train
-  unless train.nil?
-    train.next_station
-    puts train
-  end
+  return unless train
+
+  train.next_station
+  puts train
 end
 
 def show_stations_and_trains
@@ -90,7 +90,7 @@ def show_stations_and_trains
   @stations.size > 0 ? (puts @stations) : (puts "Нет станций")
 end
 
-def get_train
+def train
   trains = Train.trains
   if trains.size == 1
     trains[0]
