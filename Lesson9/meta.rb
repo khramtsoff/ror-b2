@@ -7,13 +7,30 @@ module Meta
 	end
 	
 	module ClassMethods
-		def att_accessor_with_history
+		def att_accessor_with_history(*args)
+			args.each do |name|
+				define_method("#{name}=") do |val|
+					instance_variable_set("@#{name}", val)
+          h = instance_variable_get("@#{name}_history")
+          h ||= []
+          h << val
+          instance_variable_set("@#{name}_history", h)
+				end
+				define_method("#{name}") do
+					instance_variable_get("@#{name}")
+				end
+
+        define_method("#{name}_history") do
+          instance_variable_get("@#{name}_history")
+        end
+			end
+		end
+		
+		def strong_attr_acessor
 		end
 	end
 	
 	module InstanceMethods
-		def strong_attr_acessor
-		end
 	end
 end
 
@@ -36,7 +53,17 @@ module Validation
 end
 
 if __FILE__ == $PROGRAM_NAME
-	class Array
-	def word
+
+  Test.att_accessor_with_history(:test)
+
+  t = Test.new
+
+  t.test = "123"
+  puts t.test
+
+  t.test = "456"
+
+  puts "History"
+  puts t.test_history
 
 end
