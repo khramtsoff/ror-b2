@@ -1,9 +1,12 @@
 #!/usr/bin/ruby
+require_relative 'validation'
 
 class RailwayStation
   @@stations = []
 
   attr_reader :name, :trains
+
+  validate :name, :presence
 
   def initialize(name)
     @name = name
@@ -32,20 +35,10 @@ class RailwayStation
   def self.all
   end
 
-  def valid?
-    validate!
-  rescue
-    false
-  end
-
   def call_trains(block)
     self.trains.each { |t| block.call(t) }
   end
 
   protected
 
-  def validate!
-    fail 'name' if name.to_s == ''
-    true
-  end
 end

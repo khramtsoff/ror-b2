@@ -7,8 +7,7 @@ module Validation
   module ClassMethods
     @validators = []
     def validate(name, type, *args)
-      @validators ||= []
-      @validators << name
+      validators << [name, type, args]
     end
 
     def validators
@@ -20,8 +19,9 @@ module Validation
   module InstanceMethods
     def validate!
       # fail 'name' if name.to_s == ''
-      self.class.validators.each do |name, type, *args|
+      self.class.validators.each do |name, type, args|
         v = instance_variable_get("@#{name}")
+        puts type
         case type
           when :presence
             raise "empty" if v.nil?
@@ -29,6 +29,8 @@ module Validation
             raise "format" if v !~ args.first
           when :type
             raise "type" unless v.instance_of?(args.first)
+          else
+            raise "invalid type"
         end
       end
       true
@@ -45,17 +47,21 @@ end
 class A
   include Validation
 
-  validate :x, :test
-  validate :y, :test
+  attr_accessor :x, :y
+  validate :x, :presence
+  validate :y, :type, String
 
   def test
-    puts self.class.validators
+    self.class.validators
   end
 
 end
 
 a = A.new
-a.test
+# a.test
+
+a.x = 123
+a.y = "one"
 
 a.validate!
 
