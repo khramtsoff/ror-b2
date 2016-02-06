@@ -21,14 +21,19 @@ module Validation
       # fail 'name' if name.to_s == ''
       self.class.validators.each do |name, type, args|
         v = instance_variable_get("@#{name}")
+        first = args.first
         puts type
         case type
           when :presence
             raise "empty" if v.nil?
           when :format
-            raise "format" if v !~ args.first
+            raise "format" if v !~ first
           when :type
-            raise "type" unless v.instance_of?(args.first)
+            raise "type" unless v.instance_of?(first)
+          when :array_type
+            raise "array_type" if v.any? { |x| !x.instance_of? first}
+          when :custom
+            raise "custom" if !yield
           else
             raise "invalid type"
         end

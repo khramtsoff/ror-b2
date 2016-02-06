@@ -2,28 +2,19 @@
 
 require_relative 'train'
 require_relative 'producer'
+require_relative 'validation'
 
 class Wagon
   include Producer
+  include Validation
 
   attr_accessor :type
+
+  validate :type, :presence
 
   def initialize(type)
     @type = type
 
     validate!
-  end
-
-  def valid?
-    validate!
-  rescue
-    false
-  end
-
-  protected
-
-  def validate!
-    fail 'type' if type.to_s == ''
-    true
   end
 end

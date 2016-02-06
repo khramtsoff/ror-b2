@@ -1,9 +1,14 @@
 #!/usr/bin/ruby
 
 require_relative 'railwaystation'
+require_relative 'validation'
 
 class Route
+  include Validation
+
   @stations = []
+
+  validate :stations, :array_type, RailwayStation
 
   def initialize(start, final)
     @stations << start
@@ -22,18 +27,5 @@ class Route
 
   def print_stations
     puts @stations
-  end
-
-  def valid?
-    validate!
-  rescue
-    false
-  end
-
-  protected
-
-  def validate!
-    fail 'wrong station class' if @stations.any? { |x| !x.is_a? RailwayStation }
-    true
   end
 end

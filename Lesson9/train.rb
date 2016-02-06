@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
 require_relative 'producer'
+require_relative 'validation'
 
 module InstanceCounter
   def self.included(base)
@@ -25,11 +26,18 @@ end
 
 class Train
   include Producer
+  include Validation
 
   NUMBER_FORMAT = /^([a-zа-я]{3}|\d{3})-{0,1}([a-zа-я]{2}|\d{2})$/i
 
   CARGO = 'cargo'.freeze
   PASSENGER = 'passenger'.freeze
+
+  validate :train_number, :presence
+  validate :train_number, :format, NUMBER_FORMAT
+  validate :length, :presence
+  validate :speed, :presence
+  validate :train_number, :custom, lambda {self.class.find(train_number.to_s.to_sym)}
 
   @@trains = {}
 
@@ -59,12 +67,6 @@ class Train
     validate!
 
     @@trains[train_number.to_s.to_sym] = self
-  end
-
-  def valid?
-    validate!
-  rescue
-    false
   end
 
   def stop
@@ -132,14 +134,4 @@ class Train
   protected
 
   attr_writer :type, :speed, :train_number
-
-  def validate!
-    fail 'train_number empty' if train_number.to_s == ''
-    #		raise "train_number format" if self.train_number.to_s !~ NUMBER_FORMAT
-    #		raise "type" if self.type != CARGO || self.type != PASSENGER
-    fail 'length' if self.length.nil? || self.length.to_i < 0
-    fail 'speed' if self.length.nil?
-    fail 'duplicate train number' if self.class.find(train_number.to_s.to_sym)
-    true
-  end
 end

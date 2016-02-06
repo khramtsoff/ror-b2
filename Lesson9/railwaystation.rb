@@ -2,6 +2,8 @@
 require_relative 'validation'
 
 class RailwayStation
+  include Validation
+
   @@stations = []
 
   attr_reader :name, :trains
