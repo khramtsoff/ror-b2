@@ -18,34 +18,39 @@ module Validation
 
   module InstanceMethods
     def validate!
-      # fail 'name' if name.to_s == ''
-      self.class.validators.each do |name, type, args|
-        v = instance_variable_get("@#{name}")
-        first = args.first
-        puts type
-        case type
-          when :presence
-            raise "empty" if v.nil?
-          when :format
-            raise "format" if v !~ first
-          when :type
-            raise "type" unless v.instance_of?(first)
-          when :array_type
-            raise "array_type" if v.any? { |x| !x.instance_of? first}
-          when :custom
-            raise "custom" if !yield
-          else
-            raise "invalid type"
-        end
+      self.class.validators.each do |name, type, *args|
+        self.send(type, instance_variable_get("@#{name}"), *args)
       end
       true
     end
 
-    def valid?
-      validate!
-    rescue
-      false
+    def presence(var, *args)
+      raise "empty" if var.nil?
     end
+
+    def format(var, *args)
+      raise "format" if var !~ args.first
+    end
+
+    def type(var, *args)
+      puts var.class
+      puts var
+      raise "type" unless var.instance_of?(args.flatten.first)
+    end
+
+    def array_type(var, *args)
+      raise "array_type" if var.any? { |x| !x.instance_of? args.first}
+    end
+
+    def custom!
+      raise "custom" if !yield
+    end
+
+  def valid?
+    validate!
+  rescue
+    false
+  end
   end
 end
 
@@ -69,4 +74,3 @@ a.x = 123
 a.y = "one"
 
 a.validate!
-
